@@ -202,6 +202,7 @@ class EventInfo(BaseModel):
     id: int
     name: str
     type: str
+    category: Optional[str] = None
     unit: str
     max_per_class: int
     max_per_student: int
@@ -216,7 +217,8 @@ class EventInfo(BaseModel):
 class EventCreate(BaseModel):
     """创建项目请求"""
     name: str = Field(..., min_length=1, max_length=100)
-    type: str = Field(..., pattern="^(track|field|relay)$")
+    type: str = Field(..., pattern="^(track|field)$")
+    category: Optional[str] = Field(None, max_length=50)
     unit: str = Field(..., min_length=1, max_length=20)
     max_per_class: int = Field(default=3, ge=1)
     max_per_student: int = Field(default=3, ge=1)
@@ -228,7 +230,8 @@ class EventCreate(BaseModel):
 class EventUpdate(BaseModel):
     """更新项目请求"""
     name: Optional[str] = Field(None, min_length=1, max_length=100)
-    type: Optional[str] = Field(None, pattern="^(track|field|relay)$")
+    type: Optional[str] = Field(None, pattern="^(track|field)$")
+    category: Optional[str] = Field(None, max_length=50)
     unit: Optional[str] = Field(None, min_length=1, max_length=20)
     max_per_class: Optional[int] = Field(None, ge=1)
     max_per_student: Optional[int] = Field(None, ge=1)

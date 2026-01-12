@@ -70,14 +70,14 @@ export const useEventStore = defineStore('event', () => {
 
   // 更新项目组别
   async function updateEventGroup(eventId, groupId, data) {
-    const res = await request.put(`/events/${eventId}/groups/${groupId}`, data)
+    const res = await request.put(`/events/groups/${groupId}`, data)
     await fetchEventGroups(eventId)
     return res
   }
 
   // 删除项目组别
   async function deleteEventGroup(eventId, groupId) {
-    await request.delete(`/events/${eventId}/groups/${groupId}`)
+    await request.delete(`/events/groups/${groupId}`)
     await fetchEventGroups(eventId)
   }
 
@@ -94,8 +94,8 @@ export const useEventStore = defineStore('event', () => {
   }
 
   // 从模板创建项目
-  async function createFromTemplate(templateId) {
-    const res = await request.post(`/events/templates/${templateId}/create`)
+  async function createFromTemplate(templateName) {
+    const res = await request.post(`/events/from-template?template_name=${encodeURIComponent(templateName)}`)
     await fetchEvents()
     return res
   }

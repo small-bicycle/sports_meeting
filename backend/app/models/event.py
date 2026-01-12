@@ -11,7 +11,8 @@ class Event(BaseModel):
     __tablename__ = "events"
     
     name = Column(String(100), nullable=False, comment="项目名称")
-    type = Column(Enum("track", "field", "relay", name="event_type_enum"), nullable=False, comment="类型")
+    type = Column(String(20), nullable=False, comment="类型：track径赛/field田赛")
+    category = Column(String(50), nullable=True, comment="子分类：短距离跑/中距离跑/接力跑/跨栏跑/投掷/跳跃/趣味/游泳/跳绳")
     unit = Column(String(20), nullable=False, comment="成绩单位")
     max_per_class = Column(Integer, default=3, comment="每班限报人数")
     max_per_student = Column(Integer, default=3, comment="每人限报项目数")
