@@ -1,0 +1,4 @@
+# file: E:\work_isoftstone\python_pro\smallbike_study\校园运动会管理系统\backend\app\models\event.py
+# hypothesis_version: 6.150.0
+
+[100, 'A', 'Event', 'EventGroup', 'F', 'M', 'Registration', 'all, delete-orphan', 'event', 'event_groups', 'event_type_enum', 'events', 'events.id', 'field', 'group', 'group_gender_enum', 'groups', 'relay', 'track', '性别限制', '成绩单位', '所属项目ID', '排序序号', '是否有预赛', '每人限报项目数', '每班限报人数', '类型', '组别名称', '计分规则', '适用年级ID列表', '项目名称']

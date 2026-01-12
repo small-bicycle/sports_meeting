@@ -1,0 +1,4 @@
+# file: E:\work_isoftstone\python_pro\smallbike_study\校园运动会管理系统\backend\app\models\log.py
+# hypothesis_version: 6.150.0
+
+['IP地址', 'operation_logs', 'users.id', '操作人ID', '操作类型', '操作详情', '目标ID', '目标类型']

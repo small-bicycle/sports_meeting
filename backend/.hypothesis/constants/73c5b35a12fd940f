@@ -1,0 +1,4 @@
+# file: E:\work_isoftstone\python_pro\smallbike_study\校园运动会管理系统\backend\app\models\score.py
+# hypothesis_version: 6.150.0
+
+[200, 'Registration', 'final', 'preliminary', 'registrations.id', 'round_enum', 'scores', 'users.id', '作废原因', '修改人ID', '修改原因', '录入人ID', '得分', '成绩值', '报名ID', '排名', '是否有效', '轮次']

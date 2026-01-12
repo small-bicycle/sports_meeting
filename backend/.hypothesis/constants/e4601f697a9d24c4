@@ -1,0 +1,4 @@
+# file: E:\work_isoftstone\python_pro\smallbike_study\校园运动会管理系统\backend\app\services\event_service.py
+# hypothesis_version: 6.150.0
+
+['1', '100米', '1500米', '2', '200米', '3', '4', '400米', '4x100米接力', '5', '6', '7', '8', '800米', 'A', 'F', 'M', 'field', 'has_preliminary', 'max_per_class', 'name', 'registrations', 'relay', 'track', 'type', 'unit', '分秒', '性别限制必须是M、F或A', '模板不存在', '秒', '米', '组别不存在', '跳远', '跳高', '铅球', '项目不存在', '项目名称已存在']

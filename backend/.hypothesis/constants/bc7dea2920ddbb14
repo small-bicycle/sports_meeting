@@ -1,0 +1,4 @@
+# file: E:\work_isoftstone\python_pro\smallbike_study\校园运动会管理系统\backend\app\services\registration_service.py
+# hypothesis_version: 6.150.0
+
+['A', '学生不存在', '报名记录不存在', '组别不存在或不属于该项目', '该学生已报名此项目', '该报名已有成绩记录，不能取消', '该组别不允许该年级参加', '该组别不允许该性别参加', '项目不存在']

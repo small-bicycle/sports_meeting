@@ -1,0 +1,4 @@
+# file: E:\work_isoftstone\python_pro\smallbike_study\校园运动会管理系统\backend\app\models\announcement.py
+# hypothesis_version: 6.150.0
+
+[200, 'announcements', 'class', 'content_type_enum', 'event', 'grade', 'users.id', '公示标题', '关闭时间', '内容类型', '分享码', '创建人ID', '包含的项目ID', '是否有效']

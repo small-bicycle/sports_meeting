@@ -1,0 +1,4 @@
+# file: E:\work_isoftstone\python_pro\smallbike_study\校园运动会管理系统\backend\app\models\user.py
+# hypothesis_version: 6.150.0
+
+[255, 'users', '姓名', '密码哈希', '是否启用', '是否管理员', '权限列表', '登录失败次数', '登录账号', '锁定截止时间']

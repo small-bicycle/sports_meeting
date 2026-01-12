@@ -1,0 +1,4 @@
+# file: E:\work_isoftstone\python_pro\smallbike_study\校园运动会管理系统\backend\app\core\config.py
+# hypothesis_version: 6.150.0
+
+[100, 1024, 3306, '.env', '.xls', '.xlsx', '1.0.0', 'HS256', 'localhost', 'smallbike', 'sports_meeting', 'utf-8', '校园运动会教师端管理系统']

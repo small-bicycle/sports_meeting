@@ -1,0 +1,4 @@
+# file: E:\work_isoftstone\python_pro\smallbike_study\校园运动会管理系统\backend\app\models\registration.py
+# hypothesis_version: 6.150.0
+
+['Event', 'EventGroup', 'Score', 'Student', 'all, delete-orphan', 'event_groups.id', 'event_id', 'events.id', 'registration', 'registrations', 'student_id', 'students.id', 'uq_student_event', 'users.id', '创建人ID', '学生ID', '组别ID', '道次/序号', '项目ID']
