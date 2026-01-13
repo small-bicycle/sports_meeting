@@ -350,6 +350,26 @@ async def delete_event(
 
 # ========== 组别管理 ==========
 
+@router.get("/groups/all", response_model=List[dict], summary="获取所有组别列表")
+async def get_all_groups(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    获取所有项目的组别列表（按名称去重，只返回唯一的组别名称）
+    """
+    from app.models.event import EventGroup
+    from sqlalchemy import distinct
+    
+    # 直接查询去重的组别名称
+    group_names = db.query(distinct(EventGroup.name)).all()
+    
+    # 返回去重后的组别列表
+    unique_groups = [{"name": name[0]} for name in group_names if name[0]]
+    print(f'unique_groups ===> {unique_groups}')
+    return unique_groups
+
+
 @router.get("/{event_id}/groups", response_model=List[EventGroupInfo], summary="获取项目组别列表")
 async def get_event_groups(
     event_id: int,

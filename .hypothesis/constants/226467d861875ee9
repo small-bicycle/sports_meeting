@@ -1,0 +1,4 @@
+# file: E:\smallbike\study_work\sports_meeting\backend\app\services\__init__.py
+# hypothesis_version: 6.150.0
+
+['AnnouncementService', 'AuthService', 'BaseService', 'CertificateService', 'EventService', 'ExportService', 'RegistrationService', 'ScoreService', 'StatisticsService', 'UserService']

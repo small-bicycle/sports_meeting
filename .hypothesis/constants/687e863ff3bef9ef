@@ -1,0 +1,4 @@
+# file: E:\smallbike\study_work\sports_meeting\backend\app\services\export_service.py
+# hypothesis_version: 6.150.0
+
+['M', 'bronze', 'center', 'class', 'class_name', 'event', 'gold', 'grade', 'grade_id', 'grade_name', 'id', 'name', 'points', 'preliminary', 'rank', 'registration_count', 'score', 'silver', 'student', 'student_no', 'total', 'total_score', 'value', '决赛', '参赛表格', '奖牌总数', '女', '姓名', '学号', '年级', '年级奖牌', '序号', '得分', '性别', '总分', '成绩', '成绩表', '报名表', '排名', '班级', '班级总分', '男', '组别', '轮次', '道次', '金牌', '铜牌', '银牌', '项目', '项目排名', '预赛']

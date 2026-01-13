@@ -4,7 +4,10 @@
 """
 from datetime import datetime
 from sqlalchemy import Column, Integer, DateTime
-from app.core.database import Base
+from sqlalchemy.orm import declarative_base
+
+# 创建独立的 Base，避免循环导入
+Base = declarative_base()
 
 
 class TimestampMixin:

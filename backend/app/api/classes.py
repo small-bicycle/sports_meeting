@@ -151,11 +151,17 @@ async def clear_all_classes(
     清空所有班级（同时会清空所有学生）
     """
     from app.models.base import Class, Student
+    from sqlalchemy import text
     
     # 先删除学生
     student_count = db.query(Student).delete()
     # 再删除班级
     class_count = db.query(Class).delete()
+    db.commit()
+    
+    # 重置自增ID（MySQL语法）
+    db.execute(text("ALTER TABLE students AUTO_INCREMENT = 1"))
+    db.execute(text("ALTER TABLE classes AUTO_INCREMENT = 1"))
     db.commit()
     
     return ResponseBase(message=f"已清空 {class_count} 个班级、{student_count} 个学生")

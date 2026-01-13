@@ -14,10 +14,72 @@ from app.api.deps import get_current_user, require_permission
 from app.models.user import User
 from app.schemas import (
     CertificateGenerateRequest,
-    CertificatePreviewRequest
+    CertificatePreviewRequest,
+    ExportableClassInfo,
+    ClassRegistrationExportRequest
 )
 
 router = APIRouter(prefix="/exports", tags=["数据导出"])
+
+
+# ========== 班级报名表导出 ==========
+
+@router.get("/exportable-classes", summary="获取可导出班级列表")
+async def get_exportable_classes(
+    current_user: User = Depends(require_permission("export")),
+    db: Session = Depends(get_db)
+):
+    """
+    获取所有有报名记录的班级列表
+    
+    返回按年级分组的班级信息，包含班级ID、名称、年级名称和报名人数
+    """
+    export_service = ExportService(db)
+    classes = export_service.get_exportable_classes()
+    
+    # 按年级分组
+    grades_dict = {}
+    for cls in classes:
+        grade_id = cls["grade_id"]
+        if grade_id not in grades_dict:
+            grades_dict[grade_id] = {
+                "id": grade_id,
+                "name": cls["grade_name"],
+                "classes": []
+            }
+        grades_dict[grade_id]["classes"].append(cls)
+    
+    return {"grades": list(grades_dict.values())}
+
+
+@router.post("/registration-forms", summary="批量导出班级报名表")
+async def export_class_registration_forms(
+    request: ClassRegistrationExportRequest,
+    current_user: User = Depends(require_permission("export")),
+    db: Session = Depends(get_db)
+):
+    """
+    批量导出选定班级的报名表Excel
+    
+    - **class_ids**: 班级ID列表（至少选择一个班级）
+    
+    每个班级生成独立的工作表，按项目组别分组显示报名记录
+    """
+    export_service = ExportService(db)
+    
+    try:
+        content = export_service.export_class_registration_forms(request.class_ids)
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+    
+    return StreamingResponse(
+        BytesIO(content),
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": "attachment; filename=class_registration_forms.xlsx"}
+    )
 
 
 @router.get("/registration-form", summary="导出报名表")
@@ -29,7 +91,7 @@ async def export_registration_form(
     db: Session = Depends(get_db)
 ):
     """
-    导出报名表Excel
+    导出报名表 - 每个班级一个独立的Excel文件，打包成ZIP
     
     支持按项目、班级、年级筛选
     """
@@ -42,8 +104,8 @@ async def export_registration_form(
     
     return StreamingResponse(
         BytesIO(content),
-        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        headers={"Content-Disposition": "attachment; filename=registration_form.xlsx"}
+        media_type="application/zip",
+        headers={"Content-Disposition": "attachment; filename=registration_forms.zip"}
     )
 
 

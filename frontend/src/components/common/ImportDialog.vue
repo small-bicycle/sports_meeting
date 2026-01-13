@@ -15,9 +15,11 @@
         :action="uploadAction"
         :headers="uploadHeaders"
         :accept="accept"
-        :limit="1"
+        :limit="multiple ? 20 : 1"
+        :multiple="multiple"
         :auto-upload="false"
         :on-change="handleFileChange"
+        :on-remove="handleFileRemove"
         :on-exceed="handleExceed"
         :before-upload="beforeUpload"
       >
@@ -27,7 +29,7 @@
         </div>
         <template #tip>
           <div class="upload-tip">
-            {{ tip || `支持 ${accept} 格式，文件大小不超过 ${maxSizeMB}MB` }}
+            {{ tip || `支持 ${accept} 格式${multiple ? '（可多选）' : ''}，文件大小不超过 ${maxSizeMB}MB` }}
           </div>
         </template>
       </el-upload>
@@ -75,10 +77,10 @@
         v-if="!importResult"
         type="primary" 
         :loading="loading" 
-        :disabled="!selectedFile"
+        :disabled="selectedFiles.length === 0"
         @click="handleImport"
       >
-        开始导入
+        开始导入{{ selectedFiles.length > 0 ? ` (${selectedFiles.length}个文件)` : '' }}
       </el-button>
       <el-button 
         v-else
@@ -103,7 +105,8 @@ const props = defineProps({
   tip: { type: String, default: '' },
   templateUrl: { type: String, default: '' },
   uploadAction: { type: String, default: '' },
-  uploadHeaders: { type: Object, default: () => ({}) }
+  uploadHeaders: { type: Object, default: () => ({}) },
+  multiple: { type: Boolean, default: false }
 })
 
 const emit = defineEmits(['update:modelValue', 'import', 'success'])
@@ -114,16 +117,24 @@ const visible = computed({
 })
 
 const uploadRef = ref(null)
-const selectedFile = ref(null)
+const selectedFiles = ref([])
 const loading = ref(false)
 const importResult = ref(null)
 
-const handleFileChange = (file) => {
-  selectedFile.value = file.raw
+const handleFileChange = (file, fileList) => {
+  if (props.multiple) {
+    selectedFiles.value = fileList.map(f => f.raw)
+  } else {
+    selectedFiles.value = [file.raw]
+  }
+}
+
+const handleFileRemove = (file, fileList) => {
+  selectedFiles.value = fileList.map(f => f.raw)
 }
 
 const handleExceed = () => {
-  ElMessage.warning('只能上传一个文件')
+  ElMessage.warning(props.multiple ? '最多上传20个文件' : '只能上传一个文件')
 }
 
 const beforeUpload = (file) => {
@@ -145,7 +156,7 @@ const beforeUpload = (file) => {
 }
 
 const handleImport = async () => {
-  if (!selectedFile.value) {
+  if (selectedFiles.value.length === 0) {
     ElMessage.warning('请先选择文件')
     return
   }
@@ -153,8 +164,10 @@ const handleImport = async () => {
   loading.value = true
   try {
     // 触发导入事件，由父组件处理实际导入逻辑
+    // 传递文件数组（多文件）或单个文件（单文件模式）
+    const filesToImport = props.multiple ? selectedFiles.value : selectedFiles.value[0]
     const result = await new Promise((resolve, reject) => {
-      emit('import', selectedFile.value, { resolve, reject })
+      emit('import', filesToImport, { resolve, reject })
     })
     
     importResult.value = result
@@ -175,7 +188,7 @@ const handleImport = async () => {
 }
 
 const handleReset = () => {
-  selectedFile.value = null
+  selectedFiles.value = []
   importResult.value = null
   uploadRef.value?.clearFiles()
 }

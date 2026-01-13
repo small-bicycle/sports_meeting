@@ -321,4 +321,11 @@ class EventService:
         count = self.db.query(Event).count()
         self.db.query(Event).delete()
         self.db.commit()
+        
+        # 重置自增ID（MySQL语法）
+        from sqlalchemy import text
+        self.db.execute(text("ALTER TABLE events AUTO_INCREMENT = 1"))
+        self.db.execute(text("ALTER TABLE event_groups AUTO_INCREMENT = 1"))
+        self.db.commit()
+        
         return count, ""

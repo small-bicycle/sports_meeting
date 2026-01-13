@@ -1,0 +1,4 @@
+# file: E:\smallbike\study_work\sports_meeting\backend\app\services\certificate_service.py
+# hypothesis_version: 6.150.0
+
+[1.2, 1.5, 2.2, 'CERTIFICATE', 'Eighth Place', 'Fifth Place', 'First Place (Gold)', 'Fourth Place', 'Helvetica', 'Helvetica-Bold', 'Seventh Place', 'Sixth Place', 'Third Place (Bronze)', 'description', 'final', 'id', 'name', '团体奖状', '学校体育部', '标准奖状', '校园运动会', '适用于各类比赛的标准奖状模板', '适用于接力赛等团体项目', '适用于第一名的特殊奖状模板', '金牌奖状']

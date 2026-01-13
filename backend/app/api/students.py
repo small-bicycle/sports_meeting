@@ -220,8 +220,13 @@ async def clear_all_students(
 ):
     """清空所有学生"""
     from app.models.base import Student
+    from sqlalchemy import text
     
     student_count = db.query(Student).delete()
+    db.commit()
+    
+    # 重置自增ID（MySQL语法）
+    db.execute(text("ALTER TABLE students AUTO_INCREMENT = 1"))
     db.commit()
     
     return ResponseBase(message=f"已清空 {student_count} 个学生")

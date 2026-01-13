@@ -144,6 +144,7 @@ async def clear_all_grades(
     清空所有年级（同时会清空所有班级和学生）
     """
     from app.models.base import Grade, Class, Student
+    from sqlalchemy import text
     
     # 先删除学生
     student_count = db.query(Student).delete()
@@ -151,6 +152,12 @@ async def clear_all_grades(
     class_count = db.query(Class).delete()
     # 最后删除年级
     grade_count = db.query(Grade).delete()
+    db.commit()
+    
+    # 重置自增ID（MySQL语法）
+    db.execute(text("ALTER TABLE students AUTO_INCREMENT = 1"))
+    db.execute(text("ALTER TABLE classes AUTO_INCREMENT = 1"))
+    db.execute(text("ALTER TABLE grades AUTO_INCREMENT = 1"))
     db.commit()
     
     return ResponseBase(message=f"已清空 {grade_count} 个年级、{class_count} 个班级、{student_count} 个学生")

@@ -2,8 +2,9 @@
 数据库连接与ORM配置模块
 """
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.orm import sessionmaker
 from app.core.config import settings
+from app.models.base_model import Base
 
 # 创建数据库引擎
 engine = create_engine(
@@ -17,9 +18,6 @@ engine = create_engine(
 
 # 创建会话工厂
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-# 创建模型基类
-Base = declarative_base()
 
 
 def get_db():

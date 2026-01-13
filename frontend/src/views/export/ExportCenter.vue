@@ -70,11 +70,11 @@ const customForm = reactive({
 })
 
 const exportItems = [
-  { key: 'registrations', title: '报名表导出', description: '导出所有报名信息，包含学生、项目、组别等', icon: 'Document', url: '/exports/registrations' },
-  { key: 'scores', title: '成绩表导出', description: '导出所有成绩记录，包含名次、积分等', icon: 'DataLine', url: '/exports/scores' },
-  { key: 'rankings', title: '排名表导出', description: '导出各项目排名、班级总分、年级奖牌榜', icon: 'TrendCharts', url: '/exports/rankings' },
-  { key: 'students', title: '学生名单导出', description: '导出学生基本信息', icon: 'User', url: '/exports/students' },
-  { key: 'participation', title: '参赛表格导出', description: '导出参赛表格，可自定义字段', icon: 'List', url: '/exports/participation' },
+  { key: 'registrations', title: '报名表导出', description: '导出所有报名信息，包含学生、项目、组别等', icon: 'Document', url: '/exports/registration-form' },
+  { key: 'scores', title: '成绩表导出', description: '导出所有成绩记录，包含名次、积分等', icon: 'DataLine', url: '/exports/score-sheet' },
+  { key: 'rankings', title: '排名表导出', description: '导出各项目排名、班级总分、年级奖牌榜', icon: 'TrendCharts', url: '/exports/ranking-sheet?type=class' },
+  { key: 'students', title: '学生名单导出', description: '导出学生基本信息', icon: 'User', url: '/students/export' },
+  { key: 'participation', title: '参赛表格导出', description: '导出参赛表格，可自定义字段', icon: 'List', url: '/exports/all-events' },
   { key: 'custom', title: '自定义导出', description: '根据条件筛选导出数据', icon: 'Setting', custom: true }
 ]
 
@@ -101,7 +101,9 @@ const handleExport = async (item) => {
   loading[item.key] = true
   try {
     const response = await request.get(item.url, { responseType: 'blob' })
-    const filename = `${item.title}_${new Date().toLocaleDateString()}.xlsx`
+    // 报名表导出为ZIP文件，其他为Excel
+    const ext = item.key === 'registrations' ? '.zip' : '.xlsx'
+    const filename = `${item.title}_${new Date().toLocaleDateString()}${ext}`
     downloadFile(response, filename)
     ElMessage.success('导出成功')
   } catch (e) {
@@ -116,7 +118,18 @@ const handleCustomExport = async () => {
   try {
     const params = { ...customForm }
     Object.keys(params).forEach(k => { if (!params[k]) delete params[k] })
-    const response = await request.get(`/exports/${customForm.type}`, { params, responseType: 'blob' })
+    // 映射导出类型到正确的 API 路径
+    const urlMap = {
+      registrations: '/exports/registration-form',
+      scores: '/exports/score-sheet',
+      rankings: '/exports/ranking-sheet'
+    }
+    const url = urlMap[customForm.type] || `/exports/${customForm.type}`
+    // 排名表需要 type 参数
+    if (customForm.type === 'rankings') {
+      params.type = 'class'
+    }
+    const response = await request.get(url, { params, responseType: 'blob' })
     const filename = `自定义导出_${new Date().toLocaleDateString()}.xlsx`
     downloadFile(response, filename)
     ElMessage.success('导出成功')

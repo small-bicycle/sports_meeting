@@ -1,0 +1,4 @@
+# file: E:\smallbike\study_work\sports_meeting\backend\app\models\base.py
+# hypothesis_version: 6.150.0
+
+['Class', 'F', 'Grade', 'M', 'Registration', 'Student', 'all, delete-orphan', 'class_', 'classes', 'classes.id', 'gender_enum', 'grade', 'grades', 'grades.id', 'student', 'students', '姓名', '学号', '年级名称', '性别', '所属年级ID', '所属班级ID', '排序序号', '班级名称']

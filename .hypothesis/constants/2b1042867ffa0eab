@@ -1,0 +1,4 @@
+# file: E:\smallbike\study_work\sports_meeting\backend\app\core\exceptions.py
+# hypothesis_version: 6.150.0
+
+[400, 401, 403, 404, 500, 'ACCOUNT_LOCKED', 'AUTH_ERROR', 'DB_ERROR', 'DUPLICATE', 'FILE_PARSE_ERROR', 'FILE_TYPE_ERROR', 'NOT_FOUND', 'PERMISSION_DENIED', 'REF_EXISTS', 'REG_DUPLICATE', 'REG_LIMIT_EXCEEDED', 'SCORE_DUPLICATE', 'SCORE_INVALID', 'SYSTEM_ERROR', 'allowed_types', 'class', 'current', 'error', 'event', 'existing_score_id', 'field', 'id', 'limit', 'limit_type', 'references', 'required_permission', 'resource', 'row', 'student', 'unlock_time', '不支持的文件类型', '数据库操作失败', '文件解析错误', '权限不足', '系统异常，请联系管理员', '认证失败', '该学生已报名此项目', '该轮次已有成绩记录', '账号已被锁定']

@@ -1,0 +1,4 @@
+# file: E:\smallbike\study_work\sports_meeting\backend\app\models\log.py
+# hypothesis_version: 6.150.0
+
+['IP地址', 'operation_logs', 'users.id', '操作人ID', '操作类型', '操作详情', '目标ID', '目标类型']

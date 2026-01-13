@@ -2,6 +2,7 @@
 报名管理API路由模块
 """
 from fastapi import APIRouter, Depends, HTTPException, status, Query, UploadFile, File
+from typing import List
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
@@ -25,9 +26,12 @@ async def get_registrations(
     page: int = Query(1, ge=1, description="页码"),
     page_size: int = Query(20, ge=1, le=100, description="每页数量"),
     event_id: int = Query(None, description="按项目筛选"),
+    group_id: int = Query(None, description="按组别ID筛选"),
+    group_name: str = Query(None, description="按组别名称筛选"),
     class_id: int = Query(None, description="按班级筛选"),
     grade_id: int = Query(None, description="按年级筛选"),
     student_id: int = Query(None, description="按学生筛选"),
+    student_name: str = Query(None, description="按学生姓名筛选"),
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -36,18 +40,24 @@ async def get_registrations(
     
     支持多条件筛选：
     - **event_id**: 按项目筛选
+    - **group_id**: 按组别ID筛选
+    - **group_name**: 按组别名称筛选
     - **class_id**: 按班级筛选
     - **grade_id**: 按年级筛选
     - **student_id**: 按学生筛选
+    - **student_name**: 按学生姓名筛选（模糊匹配）
     """
     reg_service = RegistrationService(db)
     registrations, total = reg_service.get_registration_list(
         page=page,
         page_size=page_size,
         event_id=event_id,
+        group_id=group_id,
+        group_name=group_name,
         class_id=class_id,
         grade_id=grade_id,
-        student_id=student_id
+        student_id=student_id,
+        student_name=student_name
     )
     
     return {
@@ -63,7 +73,8 @@ async def get_registrations(
                 class_name=r.student.class_.name if r.student and r.student.class_ else None,
                 grade_name=r.student.class_.grade.name if r.student and r.student.class_ and r.student.class_.grade else None,
                 event_name=r.event.name if r.event else None,
-                group_name=r.group.name if r.group else None
+                group_name=r.group.name if r.group else None,
+                created_at=r.created_at
             ) for r in registrations
         ],
         "total": total,
@@ -199,14 +210,30 @@ async def delete_registration(
     return ResponseBase(message="取消成功")
 
 
-@router.post("/import", response_model=ImportResponse, summary="批量导入报名")
-async def import_registrations(
-    file: UploadFile = File(..., description="Excel文件"),
+@router.delete("", response_model=ResponseBase, summary="清空所有报名")
+async def clear_all_registrations(
     current_user: User = Depends(require_permission("registration_manage")),
     db: Session = Depends(get_db)
 ):
     """
-    批量导入报名
+    清空所有报名记录
+    
+    同时清空相关的学生数据
+    """
+    reg_service = RegistrationService(db)
+    count = reg_service.clear_all_registrations()
+    
+    return ResponseBase(message=f"已清空 {count} 条报名记录")
+
+
+@router.post("/import", response_model=ImportResponse, summary="批量导入报名")
+async def import_registrations(
+    files: List[UploadFile] = File(..., description="Excel文件（支持多选）"),
+    current_user: User = Depends(require_permission("registration_manage")),
+    db: Session = Depends(get_db)
+):
+    """
+    批量导入报名（支持多文件上传）
     
     Excel格式要求：
     - 第一行为表头
@@ -214,24 +241,33 @@ async def import_registrations(
     
     系统会自动执行查重和限制校验
     """
-    # 检查文件类型
-    if not file.filename.endswith(('.xlsx', '.xls')):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="只支持Excel文件格式(.xlsx, .xls)"
+    total_success = 0
+    total_failed = 0
+    all_errors = []
+    
+    for file in files:
+        # 检查文件类型
+        if not file.filename.endswith(('.xlsx', '.xls')):
+            all_errors.append(f"文件 {file.filename}: 只支持Excel文件格式(.xlsx, .xls)")
+            total_failed += 1
+            continue
+        
+        # 读取文件内容
+        content = await file.read()
+        
+        reg_service = RegistrationService(db)
+        success, failed, errors = reg_service.import_registrations(
+            content,
+            created_by=current_user.id,
+            filename=file.filename
         )
-    
-    # 读取文件内容
-    content = await file.read()
-    
-    reg_service = RegistrationService(db)
-    success, failed, errors = reg_service.import_registrations(
-        content,
-        created_by=current_user.id
-    )
+        
+        total_success += success
+        total_failed += failed
+        all_errors.extend(errors)
     
     return ImportResponse(
-        success=success,
-        failed=failed,
-        errors=errors
+        success=total_success,
+        failed=total_failed,
+        errors=all_errors
     )

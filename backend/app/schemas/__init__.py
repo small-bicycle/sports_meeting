@@ -254,6 +254,7 @@ class RegistrationInfo(BaseModel):
     grade_name: Optional[str] = None
     event_name: Optional[str] = None
     group_name: Optional[str] = None
+    created_at: Optional[datetime] = None
 
     class Config:
         from_attributes = True
@@ -425,6 +426,23 @@ class ExportRequest(BaseModel):
     event_id: Optional[int] = None
     class_id: Optional[int] = None
     grade_id: Optional[int] = None
+
+
+class ExportableClassInfo(BaseModel):
+    """可导出班级信息"""
+    id: int
+    name: str
+    grade_id: int
+    grade_name: str
+    registration_count: int
+
+    class Config:
+        from_attributes = True
+
+
+class ClassRegistrationExportRequest(BaseModel):
+    """班级报名表导出请求"""
+    class_ids: List[int] = Field(..., min_length=1, description="班级ID列表，至少选择一个班级")
 
 
 class CertificateGenerateRequest(BaseModel):
